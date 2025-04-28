@@ -12,8 +12,8 @@ SOURCES += \
 
 HEADERS += \
     service.h \
-    jsonHandlers.h \
     serviceAdaptor.h
 
 # Указываем, что экспортируем адаптеры и слоты для D-Bus
 QMAKE_CXXFLAGS += -DQT_DBUS_LIB
+RESOURCES += config.qrc

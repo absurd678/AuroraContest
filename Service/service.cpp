@@ -3,12 +3,14 @@
 #include "jsonHandlers.cpp"
 #include <QDebug>
 #include <QFile>
+#include <QCoreApplication>
 
 Service::Service(QObject* parent)
     : QObject(parent)
 {
     // Load initial configuration
-    QFile file("com.system.configurationManager/confManagerApplication1.json");
+    QFile file(":/confManagerApplication1.json");
+    //QFile file("com.system.configurationManager/confManagerApplication1.json");
     if (file.open(QIODevice::ReadOnly)) {
         QString jsonText = file.readAll();
         conf = unMarshal(jsonText);

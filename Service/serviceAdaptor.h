@@ -3,6 +3,7 @@
 #include <QDBusAbstractAdaptor>
 #include <QMap>
 #include <QVariant>
+#include <QDBusVariant>
 #include "service.h"
 
 class ServiceAdaptor : public QDBusAbstractAdaptor {
@@ -13,7 +14,7 @@ public:
 
 public slots:
     QMap<QString, QVariant> GetConfiguration();
-    void ChangeConfiguration(const QString& key, const QVariant& value);
+    void ChangeConfiguration(const QString& key, const QDBusVariant& value);
 
 signals:
     void configurationChanged(const QMap<QString, QVariant>& configuration);

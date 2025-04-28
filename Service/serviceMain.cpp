@@ -2,14 +2,18 @@
 #include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDebug>
+#include <QDBusVariant>
+#include <QDBusMetaType>
 #include "service.h"
 #include "serviceAdaptor.h"
 
 int main(int argc, char* argv[]) {
     QCoreApplication a(argc, argv);
+
+    qDBusRegisterMetaType<QDBusVariant>();
+
     Service s1;
     ServiceAdaptor adaptor(&s1);
-
     QDBusConnection conn = QDBusConnection::sessionBus();
     if (!conn.registerService("com.system.configurationManager")) {
         qFatal("Failed to register D-Bus service");

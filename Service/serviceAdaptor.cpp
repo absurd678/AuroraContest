@@ -10,8 +10,8 @@ QMap<QString, QVariant> ServiceAdaptor::GetConfiguration() {
     return m_service->GetConfiguration();
 }
 
-void ServiceAdaptor::ChangeConfiguration(const QString& key, const QVariant& value) {
-    m_service->ChangeConfiguration(key, value);
+void ServiceAdaptor::ChangeConfiguration(const QString& key, const QDBusVariant& value) {
+    m_service->ChangeConfiguration(key, value.variant());
 }
 
 // Forward the signal so that it is emitted on the bus
