@@ -1,0 +1,5 @@
+// === com.system.configurationManager/confManagerApplication1.json ===
+{
+    "Timeout": 1,
+    "TimeoutPhrase": "Hello DBus"
+}
