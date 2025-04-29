@@ -7,6 +7,8 @@
 #include "service.h"
 #include "serviceAdaptor.h"
 
+// TODO: Обработать команду изменения конфигурации
+// TODO: Создание нескольких объектов
 int main(int argc, char* argv[]) {
     QCoreApplication a(argc, argv);
 
