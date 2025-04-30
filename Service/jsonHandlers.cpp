@@ -3,9 +3,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QVariant>
 
-QMap<QString, QVariant> unMarshal(const QString& jsonText) {
-    QMap<QString, QVariant> map;
+QVariantMap unMarshal(const QString& jsonText) {
+    QVariantMap map;
     QJsonDocument doc = QJsonDocument::fromJson(jsonText.toUtf8());
     if (!doc.isObject())
         return map;
@@ -16,7 +17,7 @@ QMap<QString, QVariant> unMarshal(const QString& jsonText) {
     return map;
 }
 
-QString Marshal(const QMap<QString, QVariant>& someStruct) {
+QString Marshal(const QVariantMap& someStruct) {
     QJsonObject obj;
     for (auto it = someStruct.constBegin(); it != someStruct.constEnd(); ++it) {
         obj.insert(it.key(), QJsonValue::fromVariant(it.value()));

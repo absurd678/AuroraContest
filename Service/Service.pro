@@ -16,4 +16,4 @@ HEADERS += \
 
 # Указываем, что экспортируем адаптеры и слоты для D-Bus
 QMAKE_CXXFLAGS += -DQT_DBUS_LIB
-RESOURCES += config.qrc
+#RESOURCES += config.qrc

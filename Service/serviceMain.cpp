@@ -7,12 +7,13 @@
 #include "service.h"
 #include "serviceAdaptor.h"
 
-// TODO: Обработать команду изменения конфигурации
-// TODO: Создание нескольких объектов
+static const char* OBJECT_PATH = "/com/system/configurationManager/Application/confManagerApplication1";
+
 int main(int argc, char* argv[]) {
     QCoreApplication a(argc, argv);
 
     qDBusRegisterMetaType<QDBusVariant>();
+    qDBusRegisterMetaType<QVariantMap>();
 
     Service s1;
     ServiceAdaptor adaptor(&s1);
@@ -20,7 +21,7 @@ int main(int argc, char* argv[]) {
     if (!conn.registerService("com.system.configurationManager")) {
         qFatal("Failed to register D-Bus service");
     }
-    if (!conn.registerObject("/", &s1,
+    if (!conn.registerObject(OBJECT_PATH, &s1,
         QDBusConnection::ExportAdaptors | QDBusConnection::ExportScriptableSlots)) {
         qFatal("Failed to register object on D-Bus");
     }

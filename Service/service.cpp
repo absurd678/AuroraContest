@@ -8,9 +8,8 @@
 Service::Service(QObject* parent)
     : QObject(parent)
 {
-    // Load initial configuration
-    QFile file(":/confManagerApplication1.json");
-    //QFile file("com.system.configurationManager/confManagerApplication1.json");
+    m_configPath = QCoreApplication::applicationDirPath() + "/confManagerApplication1.json";
+    QFile file(m_configPath);
     if (file.open(QIODevice::ReadOnly)) {
         QString jsonText = file.readAll();
         conf = unMarshal(jsonText);
@@ -21,7 +20,7 @@ Service::Service(QObject* parent)
 
 Service::~Service() {}
 
-QMap<QString, QVariant> Service::GetConfiguration() {
+QVariantMap Service::GetConfiguration() {
     return conf;
 }
 
@@ -31,12 +30,13 @@ void Service::ChangeConfiguration(const QString& key, const QVariant& value) {
         return;
     }
     conf.insert(key, value);
-    // Save back to JSON
-    QFile file("com.system.configurationManager/confManagerApplication1.json");
+    // Сохранить в JSON
+    QFile file(m_configPath);
     if (file.open(QIODevice::WriteOnly)) {
         file.write(Marshal(conf).toUtf8());
     } else {
         qWarning() << "Cannot write config file";
     }
+    // Сигнал выплывает
     emit configurationChanged(conf);
 }

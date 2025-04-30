@@ -6,13 +6,10 @@ ServiceAdaptor::ServiceAdaptor(Service* parent)
 {
 }
 
-QMap<QString, QVariant> ServiceAdaptor::GetConfiguration() {
+QVariantMap ServiceAdaptor::GetConfiguration() {
     return m_service->GetConfiguration();
 }
 
 void ServiceAdaptor::ChangeConfiguration(const QString& key, const QDBusVariant& value) {
     m_service->ChangeConfiguration(key, value.variant());
 }
-
-// Forward the signal so that it is emitted on the bus
-// (QDBusAbstractAdaptor takes care of exposing it)

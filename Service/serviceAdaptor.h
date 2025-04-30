@@ -12,12 +12,13 @@ class ServiceAdaptor : public QDBusAbstractAdaptor {
 public:
     explicit ServiceAdaptor(Service* parent);
 
+
 public slots:
-    QMap<QString, QVariant> GetConfiguration();
-    void ChangeConfiguration(const QString& key, const QDBusVariant& value);
+    QVariantMap GetConfiguration();
+    Q_SCRIPTABLE void ChangeConfiguration(const QString& key, const QDBusVariant& value);
 
 signals:
-    void configurationChanged(const QMap<QString, QVariant>& configuration);
+    void configurationChanged(const QVariantMap& configuration);
 
 private:
     Service* m_service;

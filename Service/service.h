@@ -10,14 +10,15 @@ public:
     Service(QObject* parent = nullptr);
     ~Service();
 
-    QMap<QString, QVariant> GetConfiguration();
+    QVariantMap GetConfiguration();
 
 public slots:
     void ChangeConfiguration(const QString& key, const QVariant& value);
 
 signals:
-    void configurationChanged(const QMap<QString, QVariant>& configuration);
+    void configurationChanged(const QVariantMap& configuration);
 
 private:
-    QMap<QString, QVariant> conf;
+    QVariantMap conf;
+    QString m_configPath;   // путь к конфиг файлу приложения
 };
