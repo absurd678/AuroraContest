@@ -9,12 +9,14 @@ class Client : public QObject {
     Q_OBJECT
 public:
     explicit Client(QObject* parent = nullptr);
-
-public slots:
     void connectToService(const QString& serviceName);
     void disconnectFromService(const QString& serviceName);
-    void appFunction(const QVariantMap& configuration);
     void showPhrase();                    // Вывод TimeoutPhrase раз в Timeout мс
+
+
+public slots:
+
+    void appFunction(const QVariantMap& configuration);
 
 private:
     QDBusInterface* m_interface;

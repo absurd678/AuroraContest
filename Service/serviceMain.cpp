@@ -5,7 +5,7 @@
 #include <QDBusVariant>
 #include <QDBusMetaType>
 #include "service.h"
-#include "serviceAdaptor.h"
+//#include "serviceAdaptor.h"
 
 static const char* OBJECT_PATH = "/com/system/configurationManager/Application/confManagerApplication1";
 
@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     qDBusRegisterMetaType<QVariantMap>();
 
     Service s1;
-    ServiceAdaptor adaptor(&s1);
+   // ServiceAdaptor adaptor(&s1);
     QDBusConnection conn = QDBusConnection::sessionBus();
     if (!conn.registerService("com.system.configurationManager")) {
         qFatal("Failed to register D-Bus service");
@@ -29,3 +29,5 @@ int main(int argc, char* argv[]) {
 
     return a.exec();
 }
+
+

@@ -8,11 +8,11 @@ SOURCES += \
     serviceMain.cpp \
     service.cpp \
     jsonHandlers.cpp \
-    serviceAdaptor.cpp
+    #serviceAdaptor.cpp
 
 HEADERS += \
     service.h \
-    serviceAdaptor.h
+    #serviceAdaptor.h
 
 # Указываем, что экспортируем адаптеры и слоты для D-Bus
 QMAKE_CXXFLAGS += -DQT_DBUS_LIB

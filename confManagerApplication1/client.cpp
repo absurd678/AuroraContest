@@ -64,6 +64,7 @@ void Client::disconnectFromService(const QString& serviceName) {
 }
 
 void Client::appFunction(const QVariantMap& configuration) {
+    qDebug() << "m_timeoutPhrase";
     if (configuration.contains("TimeoutPhrase")) {
         int newTimeout = configuration.value("Timeout").toInt();
         if (newTimeout > 0 && newTimeout != m_timeout) {

@@ -13,6 +13,7 @@ int main(int argc, char* argv[]) {
 
     QCoreApplication a(argc, argv);
     qDBusRegisterMetaType<QVariantMap>();
+    qDBusRegisterMetaType<QDBusVariant>();
     Client client;
     return a.exec();
 
