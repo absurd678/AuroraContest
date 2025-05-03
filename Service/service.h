@@ -36,7 +36,9 @@ private:
 class Service : public QObject {
     Q_OBJECT
 public:
-    Service(QObject* parent = nullptr);
+    explicit Service(const QString& appName,
+                         const QString& configFilePath,
+                         QObject* parent = nullptr);
     ~Service();
 
     QVariantMap GetConfiguration();
@@ -48,6 +50,7 @@ signals:
     void configurationChanged(const QVariantMap& configuration);
 
 private:
+    QString     m_appName;
     QVariantMap conf;
     QString m_configPath;   // путь к конфиг файлу приложения
     ServiceAdaptor* m_adaptor;     // указатель на адаптер

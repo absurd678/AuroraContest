@@ -24,39 +24,31 @@ void ServiceAdaptor::ChangeConfiguration(const QString& key, const QDBusVariant&
 
 
 
-Service::Service(QObject* parent)
+Service::Service(const QString& appName,
+                 const QString& configFilePath,
+                 QObject* parent)
     : QObject(parent)
+    , m_appName(appName)
+    , m_configPath(configFilePath)
+    , m_adaptor(new ServiceAdaptor(this))
 {
-    m_adaptor = new ServiceAdaptor(this);
-    // форвардим сигнал так, чтобы адаптер его видел
+    // Проксируем сигнал к адаптеру
     connect(this, SIGNAL(configurationChanged(QVariantMap)),
             m_adaptor, SIGNAL(configurationChanged(QVariantMap)));
 
-    // Определяем директорию в ~/com.system.configurationManager
-   const QString configDir = QDir::homePath()
-                           + "/com.system.configurationManager";
-   // Создаём эту папку, если она ещё не существует
-   QDir dir(configDir);
-   if (!dir.exists()) {
-       if (!dir.mkpath(".")) {
-           qWarning() << "Не удалось создать папку" << configDir;
-       }
-   }
-   // Полный путь к файлу
-   m_configPath = configDir + "/confManagerApplication1.json";
-   qDebug()<<m_configPath;
-
-    m_configPath = QCoreApplication::applicationDirPath() + "/confManagerApplication1.json";
+    // Читаем (или создаём) JSON
     QFile file(m_configPath);
-    if (file.open(QIODevice::ReadOnly)) {
-        QString jsonText = file.readAll();
-        conf = unMarshal(jsonText);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Cannot open config for" << m_appName << "at" << m_configPath;
+        // При желании можно создать из шаблона ресурса…
     } else {
-        qWarning() << "Cannot open initial config file";
+        conf = unMarshal(QString::fromUtf8(file.readAll()));
     }
 }
 
-Service::~Service() {}
+Service::~Service() {
+    delete m_adaptor;
+}
 
 QVariantMap Service::GetConfiguration() {
     return conf;
@@ -64,7 +56,7 @@ QVariantMap Service::GetConfiguration() {
 
 void Service::ChangeConfiguration(const QString& key, const QVariant& value) {
     if (!conf.contains(key)) {
-        qWarning() << "Configuration key not found:" << key;
+         qWarning() << "[" << m_appName << "] Key not found:" << key;
         return;
     }
     conf.insert(key, value);
