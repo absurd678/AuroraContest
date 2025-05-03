@@ -1,4 +1,5 @@
 // === confManagerApplication1/mainApp1.cpp ===
+
 #include <QCoreApplication>
 #include "client.h"
 #include <QDBusMetaType>

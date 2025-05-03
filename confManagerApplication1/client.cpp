@@ -1,4 +1,5 @@
 // === confManagerApplication1/client.cpp ===
+
 #include "client.h"
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -6,20 +7,26 @@
 #include <QDBusServiceWatcher>
 #include <QDebug>
 
-Client::Client(QObject* parent)
-    : QObject(parent), m_interface(nullptr)
+Client::Client(QObject *parent)
+    : QObject(parent)
+    , m_interface(nullptr)
 {
     // Настройка клиента как watcher'а
-    QDBusServiceWatcher* watcher = new QDBusServiceWatcher(m_serviceName,
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(
+        m_serviceName,
         QDBusConnection::sessionBus(),
-        QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration,
+        QDBusServiceWatcher::WatchForRegistration
+            | QDBusServiceWatcher::WatchForUnregistration,
         this);
-    connect(watcher, &QDBusServiceWatcher::serviceRegistered,
-            this, &Client::connectToService);
-    connect(watcher, &QDBusServiceWatcher::serviceUnregistered,
-            this, &Client::disconnectFromService);
+    connect(watcher, &QDBusServiceWatcher::serviceRegistered, this,
+            &Client::connectToService);
+    connect(watcher, &QDBusServiceWatcher::serviceUnregistered, this,
+            &Client::disconnectFromService);
 
-    QStringList services = QDBusConnection::sessionBus().interface()->registeredServiceNames();
+    QStringList services =
+        QDBusConnection::sessionBus()
+            .interface()
+            ->registeredServiceNames();
     if (services.contains(m_serviceName)) {
         connectToService(m_serviceName);
     }
@@ -28,13 +35,19 @@ Client::Client(QObject* parent)
     connect(&m_timer, &QTimer::timeout, this, &Client::showPhrase);
 }
 
-void Client::connectToService(const QString& serviceName) {
+void Client::connectToService(const QString &serviceName)
+{
     if (serviceName != m_serviceName)
         return;
+
     qDebug() << "Client: connecting to service";
-    m_interface = new QDBusInterface(m_serviceName, m_objectPath,
-                                     m_interfaceName,
-                                     QDBusConnection::sessionBus(), this);
+
+    m_interface = new QDBusInterface(
+        m_serviceName,
+        m_objectPath,
+        m_interfaceName,
+        QDBusConnection::sessionBus(),
+        this);
 
     // Подписка на сигнал
     QDBusConnection::sessionBus().connect(
@@ -43,37 +56,40 @@ void Client::connectToService(const QString& serviceName) {
         m_interfaceName,
         "configurationChanged",
         this,
-        SLOT(appFunction(QVariantMap))
-    );
+        SLOT(appFunction(QVariantMap)));
 
     // Вывод текущей конфигурации
     QDBusReply<QVariantMap> reply = m_interface->call("GetConfiguration");
     if (reply.isValid()) {
         appFunction(reply.value());
     } else {
-        qWarning() << "Failed to call GetConfiguration:" << reply.error().message();
+        qWarning() << "Failed to call GetConfiguration:"
+                   << reply.error().message();
     }
 }
 
-void Client::disconnectFromService(const QString& serviceName) {
+void Client::disconnectFromService(const QString &serviceName)
+{
     if (serviceName != m_serviceName)
         return;
+
     qDebug() << "Client: service disconnected";
     delete m_interface;
     m_interface = nullptr;
 }
 
-void Client::appFunction(const QVariantMap& configuration) {
-    if (configuration.contains("TimeoutPhrase")) {
+void Client::appFunction(const QVariantMap &configuration)
+{
+    if (configuration.contains("Timeout")) {
         int newTimeout = configuration.value("Timeout").toInt();
         if (newTimeout > 0 && newTimeout != m_timeout) {
             m_timeout = newTimeout;
             m_timer.setInterval(m_timeout);
-            m_timer.start();    // запустить таймер
+            m_timer.start();  // запустить таймер
         }
     }
 
-    // обновляем фразу
+    // Обновляем фразу
     if (configuration.contains("TimeoutPhrase")) {
         m_timeoutPhrase = configuration.value("TimeoutPhrase").toString();
         qDebug() << m_timeoutPhrase;
